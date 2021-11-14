@@ -36,7 +36,7 @@ polarVecAddAngle (radius, Degrees angle) (Degrees deltaAngle) = (radius, (Degree
 
 -- ### Screen control
 isInScreen :: Point -> Bool
-isInScreen (x, y) | x > screenWidth || x < 0 || y > screenWidth || y < 0 = True
+isInScreen (x, y) | x > screenWidth || x > 0 || y < screenWidth || y > 0 = True
                   | otherwise = False
 
 screenWidth :: ScreenWidth

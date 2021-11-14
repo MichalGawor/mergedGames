@@ -29,10 +29,10 @@ instance HitBox Projectile where
     getHeight _ = 1
 
 instance Positioned Projectile where
-    getPosition (MkBulletProjectile bullet) = getPosition bullet
-    getPosition (MkRocketProjectile rocket) = getPosition rocket
-    setPosition (MkBulletProjectile bullet) position = MkBulletProjectile (setPosition bullet position)
-    setPosition (MkRocketProjectile rocket) position = MkRocketProjectile (setPosition rocket position)
+    getPosition (MkBulletProjectile bullet) = Objects.Objects.getPosition bullet
+    getPosition (MkRocketProjectile rocket) = Objects.Objects.getPosition rocket
+    setPosition (MkBulletProjectile bullet) position = MkBulletProjectile (Objects.Objects.setPosition bullet position)
+    setPosition (MkRocketProjectile rocket) position = MkRocketProjectile (Objects.Objects.setPosition rocket position)
 
 
 getProjectileDamage :: Projectile -> Damage

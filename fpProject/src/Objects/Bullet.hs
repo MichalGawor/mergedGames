@@ -19,7 +19,7 @@ instance Moveable Bullet where
     move :: Bullet -> Target Point -> Maybe Bullet
     -- behaves independent on the targets due to innertia of the bullet 
     move bullet@(MkBullet { position, velocity }) _ = case uniformLinearMotion position velocity of
-                                                          newPosition | isInScreen newPosition -> Just bullet{ position=position, velocity=velocity}
+                                                          newPosition | isInScreen newPosition -> Just bullet{ position=newPosition, velocity=velocity}
                                                           otherwise -> Nothing
 
 instance Killable Bullet where 

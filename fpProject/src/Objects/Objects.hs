@@ -1,3 +1,4 @@
+{-# XTypeSynonymInstances #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
 module Objects.Objects where
@@ -53,3 +54,4 @@ intersects i1 i2 = let (p1, p2, p3, p4) = getBorders i1
                         || contains i2 p2 
                         || contains i2 p3 
                         || contains i2 p4
+

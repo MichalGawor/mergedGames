@@ -1,3 +1,4 @@
+{-# XTypeSynonymInstances #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
 module WorldScreen where
@@ -48,7 +49,8 @@ instance Renderable WorldState where
       render wstate secs = case state wstate of
                   Playing -> Translate (-1) (-1) . Scale (1/20) (1/10) $ Pictures (
                                                 concatMap (\blocks -> map (\block -> renderObject block wstate) blocks) (grid wstate) ++
-                                                [renderM (player wstate)] ++ map renderM (enemies wstate) ++ map renderM (projectiles wstate))
+                                                [renderObject (player wstate) wstate] ++
+                                                map (\e -> renderObject e wstate) (enemies wstate))
                   _     -> Blank
 
 instance HandleInput WorldState where
@@ -96,7 +98,7 @@ collisionPhase :: WorldState -> WorldState
 collisionPhase gameModel = gameModel
 
 moveObject :: Moveable a => a -> Target Point -> Maybe a
-moveObject object target = move object target 
+moveObject object target = Objects.Objects.move object target 
 
 getPlayerPosition :: PlayerShip -> Point
 getPlayerPosition (MkPlayerShip (Ship { Objects.Ships.position })) = position

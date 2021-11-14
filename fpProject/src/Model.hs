@@ -28,8 +28,6 @@ instance Updatable GameModel where
     update secs model = model { elapsedTime = elapsedTime model + secs, gameStates = update secs $ gameStates model } -- implement update like with renderable, so it calls update in gamestates -> gamestate calls update in current state -> current states updates everything
 
 
-
-
 instance HandleInput GameModel where
     handleInput model event = case event of
         EventResize (x, y)  -> model {screensize = MkScreen (fromIntegral x) (fromIntegral y)}

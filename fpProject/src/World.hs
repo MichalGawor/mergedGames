@@ -1,3 +1,6 @@
+{-# XTypeSynonymInstances #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE InstanceSigs #-}
 module World where
 
 import Helper
@@ -76,7 +79,8 @@ class Healthy a where
                     Dead -> True
                     _    -> False
 
-class (Positioned a) => RenderableObject a where
+
+class Positioned a => RenderableObject a where
     getPicture   :: a -> Picture
     getColor     :: a -> Color 
     renderObject :: a -> WorldState -> Picture
@@ -87,3 +91,31 @@ class (Positioned a) => RenderableObject a where
                 c        = World.getColor ob
                 pic      = World.getPicture ob
 
+instance RenderableObject Enemy where
+    getPicture (MkSuicideEnemy suicideShip) = World.getPicture suicideShip
+    getPicture (MkGunEnemy gunShip) = World.getPicture gunShip
+    getPicture (MkRocketEnemy rocketShip) = World.getPicture rocketShip
+
+    getColor (MkSuicideEnemy suicideShip) = World.getColor suicideShip
+    getColor (MkGunEnemy gunShip) = World.getColor gunShip
+    getColor (MkRocketEnemy rocketShip) = World.getColor rocketShip
+
+instance RenderableObject Ship where
+    getColor ship = Objects.Ships.getColor ship
+    getPicture ship = Objects.Ships.getPicture ship
+
+instance RenderableObject PlayerShip where
+    getPicture (MkPlayerShip ship) = World.getPicture ship
+    getColor (MkPlayerShip ship) = World.getColor ship
+
+instance RenderableObject GunShip where
+    getPicture (MkGunShip ship) = World.getPicture ship
+    getColor (MkGunShip ship) = World.getColor ship
+
+instance RenderableObject SuicideShip where
+    getPicture (MkSuicideShip ship _) = World.getPicture ship
+    getColor (MkSuicideShip ship _) = World.getColor ship
+
+instance RenderableObject RocketShip where
+    getPicture (MkRocketShip ship) = World.getPicture ship
+    getColor (MkRocketShip ship) = World.getColor ship

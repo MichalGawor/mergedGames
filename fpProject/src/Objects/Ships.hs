@@ -29,14 +29,11 @@ instance Killable Ship where
                                                                                                 in Just ship{ currHp = newHp, position = position, collisionDamage = collisionDamage }
                                                                         | otherwise = Nothing -- DEAL AREA DAMAGE HERE? EVENT HANDLING? 
 
-
 instance RenderableM Ship where
     renderM Ship { position, getColor, getPicture } = uncurry Graphics.Gloss.translate position (color getColor getPicture)
 
-
-
 instance Positioned Ship where
-    getPosition Ship {position} = position 
+    getPosition ship = position ship
     setPosition ship@(Ship {position}) point = ship{position=point}
 
 -- # Player's Ship
@@ -52,12 +49,14 @@ instance Moveable PlayerShip where
                                                                                                 | otherwise -> Just (MkPlayerShip ship)
     move pShip _ = Just pShip
 
+
 instance RenderableM PlayerShip where
     renderM (MkPlayerShip ship) = renderM ship  
 
+
 instance Positioned PlayerShip where
-    getPosition (MkPlayerShip ship) = getPosition ship 
-    setPosition (MkPlayerShip ship) point = MkPlayerShip (setPosition ship point)                                                          
+    getPosition (MkPlayerShip ship) = Objects.Objects.getPosition ship 
+    setPosition (MkPlayerShip ship) point = MkPlayerShip (Objects.Objects.setPosition ship point)                                                          
 
 -- instance Moveable Enemy where
 --     move (MkSuicideEnemy suicideShip) target = MkSuicideShip (move suicideShip target)
@@ -79,9 +78,12 @@ instance Moveable GunShip where
 instance RenderableM GunShip where
     renderM (MkGunShip ship) = renderM ship
 
+
+
+
 instance Positioned GunShip where
-    getPosition (MkGunShip ship) = getPosition ship
-    setPosition (MkGunShip ship) point = MkGunShip $ setPosition ship point
+    getPosition (MkGunShip ship) = Objects.Objects.getPosition ship
+    setPosition (MkGunShip ship) point = MkGunShip $ Objects.Objects.setPosition ship point
 
 -- ## Rocket ship
 data RocketShip = MkRocketShip Ship -- deriving (Killable)
@@ -96,8 +98,8 @@ instance RenderableM RocketShip where
     renderM (MkRocketShip ship) = renderM ship
 
 instance Positioned RocketShip where
-    getPosition (MkRocketShip ship) = getPosition ship
-    setPosition (MkRocketShip ship) point = MkRocketShip $ setPosition ship point
+    getPosition (MkRocketShip ship) = Objects.Objects.getPosition ship
+    setPosition (MkRocketShip ship) point = MkRocketShip $ Objects.Objects.setPosition ship point
 
 
 -- ## Suicide ship
@@ -122,8 +124,8 @@ instance RenderableM SuicideShip where
     renderM (MkSuicideShip ship _) = renderM ship
 
 instance Positioned SuicideShip where
-    getPosition (MkSuicideShip ship maxAngle) = getPosition ship
-    setPosition (MkSuicideShip ship maxAngle) point = MkSuicideShip (setPosition ship point) maxAngle
+    getPosition (MkSuicideShip ship maxAngle) = Objects.Objects.getPosition ship
+    setPosition (MkSuicideShip ship maxAngle) point = MkSuicideShip (Objects.Objects.setPosition ship point) maxAngle
 
 -- TESTING
 instance Show Ship where

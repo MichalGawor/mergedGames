@@ -1,3 +1,6 @@
+{-# XTypeSynonymInstances #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE InstanceSigs #-}
 module Objects.Enemy where
 
 import Data.Angle
@@ -22,18 +25,17 @@ instance HitBox Enemy where
 -- # Enemy datatype
 data Enemy = MkSuicideEnemy SuicideShip | MkGunEnemy GunShip | MkRocketEnemy RocketShip
 
-instance RenderableM Enemy where
-    renderM (MkSuicideEnemy suicideShip) = renderM suicideShip
-    renderM (MkGunEnemy gunShip) = renderM gunShip
-    renderM (MkRocketEnemy rocketShip) = renderM rocketShip
-
 instance Positioned Enemy where
-    getPosition (MkSuicideEnemy suicideShip) = getPosition suicideShip
-    getPosition (MkRocketEnemy rocketShip) = getPosition rocketShip
-    getPosition (MkGunEnemy gunShip) = getPosition gunShip
+    getPosition (MkSuicideEnemy suicideShip) = Objects.Objects.getPosition suicideShip
+    getPosition (MkRocketEnemy rocketShip) = Objects.Objects.getPosition rocketShip
+    getPosition (MkGunEnemy gunShip) = Objects.Objects.getPosition gunShip
     setPosition (MkSuicideEnemy suicideShip) point = MkSuicideEnemy (setPosition suicideShip point)
-    setPosition (MkRocketEnemy rocketShip) point = MkRocketEnemy $ setPosition rocketShip point
-    setPosition (MkGunEnemy gunShip) point = MkGunEnemy $ setPosition gunShip point
+    setPosition (MkRocketEnemy rocketShip) point = MkRocketEnemy (setPosition rocketShip point)
+    setPosition (MkGunEnemy gunShip) point = MkGunEnemy (setPosition gunShip point)
+
+instance Positioned a => Positioned (Maybe a) where
+    getPosition (Just enemy) = getPosition enemy
+    getPosition Nothing = (-1000,-1000)
 
 instance Moveable Enemy where
     move (MkSuicideEnemy suicideShip) target = case move suicideShip target of 
@@ -61,7 +63,7 @@ initProjectile (x, y) = undefined
 
 
 baseShip :: Ship
-baseShip = Ship {maxHp=100, currHp=100, weapon=NoWeapon, Objects.Ships.position=(50, 50), Objects.Ships.velocity=(-2.0, 0.0), collisionDamage=20, getColor=black, getPicture=(square 2.0) }
+baseShip = Ship {maxHp=100, currHp=100, weapon=NoWeapon, Objects.Ships.position=(0, 0), Objects.Ships.velocity=(-0.02, 0.0), collisionDamage=20, getColor=black, getPicture=(square 2.0) }
 
 baseWeapon :: Weapon
 baseWeapon = undefined
@@ -77,12 +79,10 @@ baseRocketSip = undefined
 
 
 
-
-
-
 -- # SHAPES FOR SHIPS
 square :: Float -> Picture
 square side = rectangleSolid side side
 
 rectangle :: Float -> Float -> Picture
 rectangle sideA sideB = rectangleSolid sideA sideB
+
