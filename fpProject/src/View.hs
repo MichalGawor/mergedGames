@@ -1,5 +1,7 @@
 -- | This module defines how to turn
 --   the game state into a picture
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE InstanceSigs #-}
 module View where
 
 import Graphics.Gloss

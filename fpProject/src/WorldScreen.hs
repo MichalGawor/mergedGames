@@ -1,3 +1,5 @@
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE InstanceSigs #-}
 module WorldScreen where
 
 import World
@@ -6,7 +8,12 @@ import Level
 import Grid
 import Objects.Player
 import Objects.Objects
+import Objects.Projectiles
+import Objects.Enemy
+import Objects.Ships
+import Kinematics
 
+import Data.Maybe
 import Graphics.Gloss
 import Graphics.Gloss.Data.Picture
 import Graphics.Gloss.Interface.IO.Game
@@ -20,13 +27,13 @@ initWorldstate = MkWorldState Unloaded 0.0 player [] [] [[]] 0.0
 instance Updatable WorldState where
       update secs wstate = wstate''
             where wstate' = case state wstate of
-                              Playing -> wstate -- updating all props of worldstate player, enemies, state, spawns
+                              Playing -> collisionPhase . shootPhase . movePhase $ wstate -- updating all props of worldstate player, enemies, state, spawns
                               _      -> wstate
                   wstate'' = wstate' -- identify collisions
 
 identifyCollisions :: WorldState -> WorldState
 identifyCollisions = undefined  
-
+ 
 calculateDamageEnemies :: WorldState -> WorldState
 calculateDamageEnemies = undefined
 
@@ -65,12 +72,12 @@ instance DoIO WorldState where
             return $ wstate' {grid = grid''}
 
 
--- | Movement phase
+    -- | Movement phase
 movePhase :: WorldState -> WorldState
-movePhase ws@(MkWorldState{ player, enemies, projectiles, timeElapsed}) = let homingTarget = getPosition player
+movePhase ws@(MkWorldState{ player, enemies, projectiles, elapsedTime}) = let homingTarget = getPosition player
                                                                               suicideEnemies = getSuicideEnemies enemies
                                                                               normalEnemies = getNormalEnemies enemies
-                                                                              movedSuicideEnemies = mapMaybe (flip moveObject homingTarget) suicideEnemies
+                                                                              movedSuicideEnemies = mapMaybe (flip moveObject (MkTarget homingTarget)) suicideEnemies
                                                                               movedNormalEnemies = mapMaybe (flip moveObject NoTarget) normalEnemies
                                                                               movedEnemies = movedNormalEnemies ++ movedSuicideEnemies
                                                                               normalProjectiles = getNormalProjectiles projectiles
@@ -78,8 +85,7 @@ movePhase ws@(MkWorldState{ player, enemies, projectiles, timeElapsed}) = let ho
                                                                               --movedNormalProjectiles = mapMaybe (flip moveObject NoTarget) normalProjectiles
                                                                               --movedHomingProjectiles = mapMaybe (flip moveObject homingTarget) homingProjectiles
                                                                               --movedProjectiles = movedNormalProjectiles ++ movedHomingProjectiles
-                                                                              movedPlayer = huskPlayerFromMaybe $ moveObject player NoTarget
-                                                                              in ws{player=movedPlayer, enemies=movedEnemies, projectiles=projectiles, timeElapsed=timeElapsed}
+                                                                              in ws{player=player, enemies=movedEnemies, projectiles=projectiles, elapsedTime=elapsedTime}
 
                               
 
@@ -87,13 +93,10 @@ shootPhase :: WorldState -> WorldState
 shootPhase gameModel = gameModel
 
 collisionPhase :: WorldState -> WorldState
-collisionPhase gameModel -> WorldState
+collisionPhase gameModel = gameModel
 
 moveObject :: Moveable a => a -> Target Point -> Maybe a
 moveObject object target = move object target 
-
-update :: ViewPort -> Float -> WorldState -> WorldState
-update _ = gameStep
 
 getPlayerPosition :: PlayerShip -> Point
 getPlayerPosition (MkPlayerShip (Ship { Objects.Ships.position })) = position
@@ -120,8 +123,3 @@ getHomingProjectiles projectiles = filter (isHomingProjectile) projectiles
 
 getNormalProjectiles :: [Projectile] -> [Projectile]
 getNormalProjectiles projectiles = filter (not . isHomingProjectile) projectiles
-
-
-shootPhase = undefined
-applyDamagePhase = undefined
-

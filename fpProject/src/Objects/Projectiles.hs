@@ -13,10 +13,15 @@ import Objects.Rocket
 data Projectile = MkBulletProjectile Bullet | MkRocketProjectile Rocket
 
 instance RenderableM Projectile where
-    renderM projectile = undefined
-        --uncurry Graphics.Gloss.translate position (color getColor getPicture)
+    renderM (MkBulletProjectile bullet) = render bullet
+        -- uncurry Graphics.Gloss.translate position (color getColor getPicture)
 
-
--- ## Projectiles 
+instance Moveable Projectile where
+    move (MkBulletProjectile bullet) target = case move bullet target of 
+                                                    Just bullet' -> Just (MkBulletProjectile (bullet')
+                                                    otherwise -> Nothing
+    move (MkRocketProjectile rocket) target = case move rocket target of
+                                                    Just rocket' -> Just (MkRocketProjectile (rocket'))
+                                                    otherwise -> Nothing
 
 

@@ -35,6 +35,16 @@ instance Positioned Enemy where
     setPosition (MkRocketEnemy rocketShip) point = MkRocketEnemy $ setPosition rocketShip point
     setPosition (MkGunEnemy gunShip) point = MkGunEnemy $ setPosition gunShip point
 
+instance Moveable Enemy where
+    move (MkSuicideEnemy suicideShip) target = case move suicideShip target of 
+                                                    Just suicideShip' -> Just (MkSuicideEnemy suicideShip')
+                                                    otherwise -> Nothing
+    move (MkGunEnemy gunShip) target = case move gunShip target of 
+                                                    Just gunShip' -> Just (MkGunEnemy gunShip')
+                                                    otherwise -> Nothing
+    move (MkRocketEnemy rocketShip) target = case move rocketShip target of 
+                                                    Just rocketShip' -> Just (MkRocketEnemy rocketShip')
+                                                    otherwise -> Nothing
 
 initSuicideEnemy :: Point -> Enemy
 initSuicideEnemy (x, y) = MkSuicideEnemy $ setPosition baseSuicideShip (x, y)
