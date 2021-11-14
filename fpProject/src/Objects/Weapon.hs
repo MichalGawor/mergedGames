@@ -1,7 +1,7 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
 
-module Weapon where
+module Objects.Weapon where
 
 import Plane
 import Projectiles
