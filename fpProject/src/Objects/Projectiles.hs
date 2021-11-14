@@ -1,11 +1,11 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
 
-module Objects.Projectiles.Projectiles where
+module Objects.Projectiles where
 
 import Plane
-import Objects.Projectiles.Bullet
-import Objects.Projectiles.Rocket
+import Objects.Bullet
+import Objects.Rocket
 
 -- # Basic types
 
