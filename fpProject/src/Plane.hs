@@ -36,8 +36,8 @@ degreeToFloat (Degrees x) = x
 
 vecToPolar :: Vector -> PolarVector
 -- represent vector in polar coordinater
-vecToPolar (x, y) = let magnitude = (sqrt ((x^2) + (y^2)))
-                          in (magnitude, (vecAngle (x, y) (1,0)))
+vecToPolar (x, y) = let magnitude = sqrt ((x^2) + (y^2))
+                          in (magnitude, (vecAngle (1, 0) (x,y)))
 
 polarToVec :: PolarVector -> Vector
 -- represent polar coords as a vector

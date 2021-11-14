@@ -51,7 +51,7 @@ instance Moveable PlayerShip where
     move (MkPlayerShip ship@(Ship {position })) _ = Just (MkPlayerShip ship{position=addOneToPosition position})
 
 addOneToPosition :: Point -> Point
-addOneToPosition (x, y) = (x+1, y)                                                      
+addOneToPosition (x, y) = (x, y)                                                      
 
 -- instance Moveable Enemy where
 --     move (MkSuicideEnemy suicideShip) target = MkSuicideShip (move suicideShip target)

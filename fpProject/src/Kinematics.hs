@@ -33,7 +33,8 @@ homingMotion :: Point -> Velocity -> Degrees Float-> Point -> Velocity
 -- homing motion, given starting location, current velocity vector, maximum turning angle and target return new velocity vector 
 homingMotion position@(x,y) currVelocity (Degrees maxAngle) target@(x',y') = let shift = (x' - x, y' - y) -- shift from current position to target's position
                                                                        in case vecAngle currVelocity shift of -- angle between current velocity vector and shift vector
-                                                                           Degrees angle | angle > maxAngle -> polarToVec (polarVecAddAngle (vecToPolar currVelocity) (Degrees maxAngle))
-                                                                           Degrees angle | angle < (-1 * maxAngle) -> polarToVec (polarVecAddAngle (vecToPolar currVelocity) (Degrees ((-1) * maxAngle)))
+                                                                           Degrees angle | angle == 0 -> currVelocity
+                                                                                         | angle > maxAngle -> polarToVec (polarVecAddAngle (vecToPolar currVelocity) (Degrees maxAngle))
+                                                                                         | angle < (-1 * maxAngle) -> polarToVec (polarVecAddAngle (vecToPolar currVelocity) (Degrees ((-1) * maxAngle)))
                                                                            degrees -> polarToVec (polarVecAddAngle (vecToPolar position) degrees)
 
