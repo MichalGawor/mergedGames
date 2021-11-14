@@ -21,8 +21,8 @@ class Moveable a where
     move :: a -> Target Point -> Maybe a
 
 -- # every object can be rendered
-class Renderable a where
-    render :: a -> Picture
+class RenderableM a where
+    renderM :: a -> Picture
 
 
 -- # some objects can be despawned

@@ -1,5 +1,6 @@
 module Grid where
 
+import Objects.Objects
 import World
 import Helper
 import Graphics.Gloss

@@ -5,6 +5,10 @@ module Model where
 import Gamestates
 import Helper
 
+import Objects.Ships
+import Objects.Player
+import Objects.Enemy
+import Objects.Projectiles
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 
@@ -13,10 +17,7 @@ data Screen = MkScreen Float Float
 data GameModel = MkGameModel { gameStates  :: GameStates,
                                elapsedTime :: Float,
                                screensize  :: Screen,
-                               background  :: Picture,
-                               player :: PlayerShip,
-                               enemies :: [Enemy],
-                               projectiles :: [Projectile]}
+                               background  :: Picture}
 
 instance Renderable GameModel where
     render model secs = Scale (width / 2) (height / 2) $ Pictures [background model, render (gameStates model) secs]  

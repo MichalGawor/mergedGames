@@ -20,10 +20,6 @@ data WorldState = MkWorldState { state :: State,
 data State = Unloaded | Playing | Paused | GameOver | Completed
 
 
-data Player = MkPlayer { player_position  :: Point,
-                         player_lives     :: Int,
-                         needs_respawn    :: Bool}
-
 data Block = MkBlock {block_position :: Point,
                       block_type     :: BlockType,
                       block_picture  :: Picture }
@@ -50,7 +46,7 @@ mapBounds wstate = let  xbound  | x - 20 <= 1    = MkBound 0 42
                                 | otherwise      = MkBound (y - 12) (y + 12)
                         mapw = fromIntegral . length . head $ bss
                         maph = fromIntegral $ length bss
-                        (xp, yp) = getPosition (player wstate)   
+                        (xp, yp) = getPosition (player wstate)
                         (x, y) = (fromInteger $ floor xp,fromInteger $ floor yp)
                         bss = grid wstate
                     in (xbound, ybound)
@@ -80,10 +76,14 @@ class Healthy a where
                     Dead -> True
                     _    -> False
 
-class (Renderable a, Positioned a) => RenderableObject a where
+class (Positioned a) => RenderableObject a where
+    getPicture   :: a -> Picture
+    getColor     :: a -> Color 
     renderObject :: a -> WorldState -> Picture
-    renderObject ob wstate  | inBound p b = Translate (x-xmin) (y-ymin) pic
+    renderObject ob wstate  | inBound p b = Translate (x-xmin) (y-ymin) (color c pic)
                             | otherwise   = Blank
         where   b@(MkBound xmin xmax, MkBound ymin ymax) = mapBounds wstate
                 p@(x, y) = getPosition ob
-                pic = render ob
+                c        = World.getColor ob
+                pic      = World.getPicture ob
+

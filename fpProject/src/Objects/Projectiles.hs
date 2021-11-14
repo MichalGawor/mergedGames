@@ -3,6 +3,7 @@
 
 module Objects.Projectiles where
 
+import Objects.Objects
 import Plane
 import Objects.Bullet
 import Objects.Rocket
@@ -11,7 +12,9 @@ import Objects.Rocket
 
 data Projectile = MkBulletProjectile Bullet | MkRocketProjectile Rocket
 
-
+instance RenderableM Projectile where
+    renderM projectile = undefined
+        --uncurry Graphics.Gloss.translate position (color getColor getPicture)
 
 
 -- ## Projectiles 

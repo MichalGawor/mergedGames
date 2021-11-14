@@ -30,8 +30,10 @@ instance Killable Ship where
                                                                         | otherwise = Nothing -- DEAL AREA DAMAGE HERE? EVENT HANDLING? 
 
 
-instance Renderable Ship where
-    render Ship { position, getColor, getPicture } = uncurry Graphics.Gloss.translate position (color getColor getPicture)
+instance RenderableM Ship where
+    renderM Ship { position, getColor, getPicture } = uncurry Graphics.Gloss.translate position (color getColor getPicture)
+
+
 
 instance Positioned Ship where
     getPosition Ship {position} = position 
@@ -50,8 +52,8 @@ instance Moveable PlayerShip where
                                                                                                 | otherwise -> Just (MkPlayerShip ship)
     move pShip _ = Just pShip
 
-instance Renderable PlayerShip where
-    render (MkPlayerShip ship) = render ship  
+instance RenderableM PlayerShip where
+    renderM (MkPlayerShip ship) = renderM ship  
 
 instance Positioned PlayerShip where
     getPosition (MkPlayerShip ship) = getPosition ship 
@@ -74,8 +76,8 @@ instance Moveable GunShip where
                                                                  newPosition | isInScreen newPosition -> Just (MkGunShip ship{ position=newPosition, velocity=velocity })         
                                                                              | otherwise -> Nothing                                             
 
-instance Renderable GunShip where
-    render (MkGunShip ship) = render ship
+instance RenderableM GunShip where
+    renderM (MkGunShip ship) = renderM ship
 
 instance Positioned GunShip where
     getPosition (MkGunShip ship) = getPosition ship
@@ -90,8 +92,8 @@ instance Moveable RocketShip where
                                                                  newPosition | isInScreen newPosition -> Just (MkRocketShip ship{ position=newPosition, velocity=velocity})
                                                                              | otherwise -> Nothing
                                                             
-instance Renderable RocketShip where
-    render (MkRocketShip ship) = render ship
+instance RenderableM RocketShip where
+    renderM (MkRocketShip ship) = renderM ship
 
 instance Positioned RocketShip where
     getPosition (MkRocketShip ship) = getPosition ship
@@ -116,8 +118,8 @@ instance Moveable SuicideShip where
                                                                                                           newPosition | isInScreen newPosition -> Just (MkSuicideShip ship{ position = newPosition, velocity = newVelocity } maxAngularSpeed)
                                                                                                                       | otherwise -> Nothing
 
-instance Renderable SuicideShip where
-    render (MkSuicideShip ship _) = render ship
+instance RenderableM SuicideShip where
+    renderM (MkSuicideShip ship _) = renderM ship
 
 instance Positioned SuicideShip where
     getPosition (MkSuicideShip ship maxAngle) = getPosition ship

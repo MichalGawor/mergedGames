@@ -25,26 +25,28 @@ step secs gstate = do
 
 
 -- | Movement phase
-movePhase :: GameModel -> GameModel
-movePhase (GameModel{ player, enemies, projectiles, timeElapsed}) = let homingTarget = getPosition player
-                                                                        suicideEnemies = getSuicideEnemies enemies
-                                                                        normalEnemies = getNormalEnemies enemies
-                                                                        movedSuicideEnemies = mapMaybe (flip moveObject homingTarget) suicideEnemies
-                                                                        movedNormalEnemies = mapMaybe (flip moveObject NoTarget) normalEnemies
-                                                                        movedEnemies = movedNormalEnemies ++ movedSuicideEnemies
-                                                                        normalProjectiles = getNormalProjectiles projectiles
-                                                                        homingProjectiles = getHomingProjectiles projectiles
-                                                                        --movedNormalProjectiles = mapMaybe (flip moveObject NoTarget) normalProjectiles
-                                                                        --movedHomingProjectiles = mapMaybe (flip moveObject homingTarget) homingProjectiles
-                                                                        --movedProjectiles = movedNormalProjectiles ++ movedHomingProjectiles
-                                                                        movedPlayer = huskPlayerFromMaybe $ moveObject player NoTarget
-                                                                        in GameModel{player=movedPlayer, enemies=movedEnemies, projectiles=projectiles, timeElapsed=timeElapsed}
+movePhase :: WorldState -> WorldState
+movePhase ws@(MkWorldState{ player, enemies, projectiles, timeElapsed}) = let homingTarget = getPosition player
+                                                                              suicideEnemies = getSuicideEnemies enemies
+                                                                              normalEnemies = getNormalEnemies enemies
+                                                                              movedSuicideEnemies = mapMaybe (flip moveObject homingTarget) suicideEnemies
+                                                                              movedNormalEnemies = mapMaybe (flip moveObject NoTarget) normalEnemies
+                                                                              movedEnemies = movedNormalEnemies ++ movedSuicideEnemies
+                                                                              normalProjectiles = getNormalProjectiles projectiles
+                                                                              homingProjectiles = getHomingProjectiles projectiles
+                                                                              --movedNormalProjectiles = mapMaybe (flip moveObject NoTarget) normalProjectiles
+                                                                              --movedHomingProjectiles = mapMaybe (flip moveObject homingTarget) homingProjectiles
+                                                                              --movedProjectiles = movedNormalProjectiles ++ movedHomingProjectiles
+                                                                              movedPlayer = huskPlayerFromMaybe $ moveObject player NoTarget
+                                                                              in ws{player=movedPlayer, enemies=movedEnemies, projectiles=projectiles, timeElapsed=timeElapsed}
 
-shootPhase :: GameModel -> GameModel
+                              
+
+shootPhase :: WorldState -> WorldState
 shootPhase gameModel = gameModel
 
-collisionPhase :: GameModel -> GameModel
-collisionPhase gameModel -> GameModel
+collisionPhase :: WorldState -> WorldState
+collisionPhase gameModel -> WorldState
 
 moveObject :: Moveable a => a -> Target Point -> Maybe a
 moveObject object target = move object target 

@@ -4,16 +4,17 @@ import World
 import Helper
 import Level
 import Grid
-import Player
+import Objects.Player
+import Objects.Objects
 
 import Graphics.Gloss
 import Graphics.Gloss.Data.Picture
 import Graphics.Gloss.Interface.IO.Game
 
 initWorldstate :: WorldState
-initWorldstate = MkWorldState player [] Unloaded [[]] 0 
+initWorldstate = MkWorldState Unloaded 0.0 player [] [] [[]] 0.0  
     where
-        player = initPlayer(0,0) 
+        player = initPlayerShip (0,0) 
 
 
 instance Updatable WorldState where
@@ -40,8 +41,7 @@ instance Renderable WorldState where
       render wstate secs = case state wstate of
                   Playing -> Translate (-1) (-1) . Scale (1/20) (1/10) $ Pictures (
                                                 concatMap (\blocks -> map (\block -> renderObject block wstate) blocks) (grid wstate) ++
-                                                [renderObject (player wstate) wstate] ++
-                                                map (\e -> renderObject e wstate) (enemies wstate))
+                                                [renderM (player wstate)] ++ map renderM (enemies wstate) ++ map renderM (projectiles wstate))
                   _     -> Blank
 
 instance HandleInput WorldState where
@@ -63,3 +63,65 @@ instance DoIO WorldState where
             let grid' = grid wstate'
             grid'' <- loadGrid grid' -- doIO for enemies, bullets, player, etc.
             return $ wstate' {grid = grid''}
+
+
+-- | Movement phase
+movePhase :: WorldState -> WorldState
+movePhase ws@(MkWorldState{ player, enemies, projectiles, timeElapsed}) = let homingTarget = getPosition player
+                                                                              suicideEnemies = getSuicideEnemies enemies
+                                                                              normalEnemies = getNormalEnemies enemies
+                                                                              movedSuicideEnemies = mapMaybe (flip moveObject homingTarget) suicideEnemies
+                                                                              movedNormalEnemies = mapMaybe (flip moveObject NoTarget) normalEnemies
+                                                                              movedEnemies = movedNormalEnemies ++ movedSuicideEnemies
+                                                                              normalProjectiles = getNormalProjectiles projectiles
+                                                                              homingProjectiles = getHomingProjectiles projectiles
+                                                                              --movedNormalProjectiles = mapMaybe (flip moveObject NoTarget) normalProjectiles
+                                                                              --movedHomingProjectiles = mapMaybe (flip moveObject homingTarget) homingProjectiles
+                                                                              --movedProjectiles = movedNormalProjectiles ++ movedHomingProjectiles
+                                                                              movedPlayer = huskPlayerFromMaybe $ moveObject player NoTarget
+                                                                              in ws{player=movedPlayer, enemies=movedEnemies, projectiles=projectiles, timeElapsed=timeElapsed}
+
+                              
+
+shootPhase :: WorldState -> WorldState
+shootPhase gameModel = gameModel
+
+collisionPhase :: WorldState -> WorldState
+collisionPhase gameModel -> WorldState
+
+moveObject :: Moveable a => a -> Target Point -> Maybe a
+moveObject object target = move object target 
+
+update :: ViewPort -> Float -> WorldState -> WorldState
+update _ = gameStep
+
+getPlayerPosition :: PlayerShip -> Point
+getPlayerPosition (MkPlayerShip (Ship { Objects.Ships.position })) = position
+
+huskPlayerFromMaybe :: Maybe PlayerShip -> PlayerShip
+huskPlayerFromMaybe (Just playerShip) = playerShip
+
+isSuicideEnemy :: Enemy -> Bool
+isSuicideEnemy (MkSuicideEnemy _) = True
+isSuicideEnemy _ = False
+
+getSuicideEnemies :: [Enemy] -> [Enemy]
+getSuicideEnemies enemies = filter isSuicideEnemy enemies
+
+getNormalEnemies :: [Enemy] -> [Enemy]
+getNormalEnemies enemies = filter (not . isSuicideEnemy) enemies
+
+isHomingProjectile :: Projectile -> Bool
+isHomingProjectile (MkRocketProjectile _) = True
+isHomingProjectile _ = False
+
+getHomingProjectiles :: [Projectile] -> [Projectile]
+getHomingProjectiles projectiles = filter (isHomingProjectile) projectiles
+
+getNormalProjectiles :: [Projectile] -> [Projectile]
+getNormalProjectiles projectiles = filter (not . isHomingProjectile) projectiles
+
+
+shootPhase = undefined
+applyDamagePhase = undefined
+

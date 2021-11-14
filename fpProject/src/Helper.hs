@@ -15,4 +15,5 @@ class Updatable a where
 class DoIO a where
     doIO :: a -> IO a
 
-
+class Renderable a where
+    render :: a -> Float -> Picture    

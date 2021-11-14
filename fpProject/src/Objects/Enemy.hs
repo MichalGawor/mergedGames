@@ -22,10 +22,10 @@ instance HitBox Enemy where
 -- # Enemy datatype
 data Enemy = MkSuicideEnemy SuicideShip | MkGunEnemy GunShip | MkRocketEnemy RocketShip
 
-instance Renderable Enemy where
-    render (MkSuicideEnemy suicideShip) = render suicideShip
-    render (MkGunEnemy gunShip) = render gunShip
-    render (MkRocketEnemy rocketShip) = render rocketShip
+instance RenderableM Enemy where
+    renderM (MkSuicideEnemy suicideShip) = renderM suicideShip
+    renderM (MkGunEnemy gunShip) = renderM gunShip
+    renderM (MkRocketEnemy rocketShip) = renderM rocketShip
 
 instance Positioned Enemy where
     getPosition (MkSuicideEnemy suicideShip) = getPosition suicideShip
@@ -38,6 +38,7 @@ instance Positioned Enemy where
 
 initSuicideEnemy :: Point -> Enemy
 initSuicideEnemy (x, y) = MkSuicideEnemy $ setPosition baseSuicideShip (x, y)
+
 
 initRocketEnemy :: Point -> Enemy
 initRocketEnemy (x, y) = MkRocketEnemy $ setPosition baseRocketSip (x, y)
@@ -64,8 +65,7 @@ baseSuicideShip = MkSuicideShip baseShip{ getColor=red, getPicture=circle 2.0} (
 baseRocketSip :: RocketShip
 baseRocketSip = undefined
 
-initPlayerShip :: PlayerShip
-initPlayerShip = MkPlayerShip baseShip{ getColor=cyan, getPicture=rectangle 4.0 2.0, Objects.Ships.velocity=(0.0, 0.0)}
+
 
 
 
