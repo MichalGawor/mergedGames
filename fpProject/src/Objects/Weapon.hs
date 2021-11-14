@@ -4,7 +4,7 @@
 module Objects.Weapon where
 
 import Plane
-import Projectiles
+import Objects.Projectiles
 
 
 -- # Basic types

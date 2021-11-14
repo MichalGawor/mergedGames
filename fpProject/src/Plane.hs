@@ -5,7 +5,6 @@ module Plane where
 import Graphics.Gloss
 import Data.Angle
 -- ### Types
-type HitBox = (Point, Point) -- square hitbox
 type PolarVector = (Float, (Degrees Float))
 type ScreenWidth = Float -- Gloss uses Floats 
 type ScreenHeight = Float -- Gloss uses Floats
@@ -45,4 +44,3 @@ screenWidth = 800
 
 screenHeight :: ScreenHeight
 screenHeight = 640
-(base) gawor@monocl

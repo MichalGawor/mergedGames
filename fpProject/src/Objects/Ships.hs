@@ -35,7 +35,7 @@ instance Renderable Ship where
 
 instance Positioned Ship where
     getPosition Ship {position} = position 
-    setPosition (Ship {position}) point = Ship {position=point}
+    setPosition ship@(Ship {position}) point = ship{position=point}
 
 -- # Player's Ship
 data PlayerShip = MkPlayerShip Ship
@@ -55,7 +55,7 @@ instance Renderable PlayerShip where
 
 instance Positioned PlayerShip where
     getPosition (MkPlayerShip ship) = getPosition ship 
-    setPosition (MkPlayerShip ship) point = setPosition ship point                                                               
+    setPosition (MkPlayerShip ship) point = MkPlayerShip (setPosition ship point)                                                          
 
 -- instance Moveable Enemy where
 --     move (MkSuicideEnemy suicideShip) target = MkSuicideShip (move suicideShip target)
@@ -120,34 +120,11 @@ instance Renderable SuicideShip where
     render (MkSuicideShip ship _) = render ship
 
 instance Positioned SuicideShip where
-    getPosition (MkSuicideShip ship) maxAngle = getPosition ship
-    setPosition (MkSuicideShip ship) maxAngle = MkSuicideShip ship maxAngle
+    getPosition (MkSuicideShip ship maxAngle) = getPosition ship
+    setPosition (MkSuicideShip ship maxAngle) point = MkSuicideShip (setPosition ship point) maxAngle
 
 -- TESTING
 instance Show Ship where
     show :: Ship -> String
     show ship@( Ship{ position }) = show position
-
-
-
-
--- # SHIPS READY TO USE!
-baseShip :: Ship
-baseShip = Ship {maxHp=100, currHp=100, weapon=NoWeapon, position=(50, 50), velocity=(-2.0, 0.0), collisionDamage=20, getColor=black, getPicture=(square 2.0) }
-
-suicideShip :: SuicideShip
-suicideShip = MkSuicideShip baseShip{ getColor=red, getPicture=circle 2.0} (Degrees 5)
-
-playerShip :: PlayerShip
-playerShip = MkPlayerShip baseShip{ getColor=cyan, getPicture=rectangle 4.0 2.0, velocity=(0.0, 0.0)}
-
-
-
-
--- # SHAPES FOR SHIPS
-square :: Float -> Picture
-square side = rectangleSolid side side
-
-rectangle :: Float -> Float -> Picture
-rectangle sideA sideB = rectangleSolid sideA sideB
 

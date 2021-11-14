@@ -1,18 +1,24 @@
 module World where
 
 import Helper
+
+
+import Objects.Objects
+import Objects.Enemy
+import Objects.Ships
+import Objects.Projectiles
 import Graphics.Gloss.Data.Picture
 import Graphics.Gloss
 
-data WorldState = MkWorldState {player          :: Player,
-                                enemies         :: [Enemy],
-                                state           :: State,
-                                grid            :: [[Block]],
-                                completed_x     :: Float}
-
+data WorldState = MkWorldState { state :: State,
+                                 elapsedTime :: Float,
+                                 player :: PlayerShip,
+                                 enemies :: [Enemy],
+                                 projectiles :: [Projectile],
+                                 grid            :: [[Block]],
+                                 completed_x     :: Float}
 data State = Unloaded | Playing | Paused | GameOver | Completed
 
-data Enemy = MkEnemy {enemy_position :: Point}     
 
 data Player = MkPlayer { player_position  :: Point,
                          player_lives     :: Int,
@@ -44,24 +50,10 @@ mapBounds wstate = let  xbound  | x - 20 <= 1    = MkBound 0 42
                                 | otherwise      = MkBound (y - 12) (y + 12)
                         mapw = fromIntegral . length . head $ bss
                         maph = fromIntegral $ length bss
-                        (xp, yp) = player_position (player wstate)   
+                        (xp, yp) = getPosition (player wstate)   
                         (x, y) = (fromInteger $ floor xp,fromInteger $ floor yp)
                         bss = grid wstate
                     in (xbound, ybound)
-
-class HitBox a => Moveable a where
-    getVelocity    :: a -> Velocity
-    setVelocity    :: a -> Velocity -> a
-    getSpeed       :: a -> Float
-
-    move           :: a -> [[Block]] -> a
-    move i bss = undefined
-                        
-    newpos         :: a -> Point
-    newpos i = undefined
-
-    isMoveable     :: a -> Point -> [[Block]] -> Bool
-    isMoveable i (x, y) bss = undefined
 
 data Health = Dead | Alive Int
 
@@ -95,11 +87,3 @@ class (Renderable a, Positioned a) => RenderableObject a where
         where   b@(MkBound xmin xmax, MkBound ymin ymax) = mapBounds wstate
                 p@(x, y) = getPosition ob
                 pic = render ob
-
-class (Moveable a, Healthy a) => UpdatableObject a where
-    updateObject :: a -> Float -> WorldState -> a
-    updateObject ob secs wstate | isDead ob = ob
-                                | otherwise = ob''
-                        where ob'   = move ob (grid wstate)
-                              ob'' = customUpdate ob' secs wstate
-    customUpdate :: a -> Float -> WorldState -> a

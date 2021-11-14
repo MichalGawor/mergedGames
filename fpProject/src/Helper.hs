@@ -6,9 +6,6 @@ import Graphics.Gloss.Data.Picture
 
 type Velocity = (Float, Float) 
 
-
-
-
 class HandleInput a where
     handleInput :: a -> Event -> a                        
 
