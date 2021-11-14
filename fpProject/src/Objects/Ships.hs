@@ -1,6 +1,6 @@
+{-# XTypeSynonymInstances #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
-{-# LANGUAGE DeriveAnyClass #-}
 module Objects.Ships where 
 
 import Data.Angle 
@@ -20,8 +20,8 @@ data Ship = Ship {
     position :: Point,
     velocity :: Velocity,
     collisionDamage :: Damage,
-    getColor :: Color,
-    getPicture :: Picture }
+    getShipColor :: Color,
+    getShipPicture :: Picture }
 
 instance Killable Ship where
     takeDamage :: Ship -> Damage -> Maybe Ship
@@ -30,7 +30,7 @@ instance Killable Ship where
                                                                         | otherwise = Nothing -- DEAL AREA DAMAGE HERE? EVENT HANDLING? 
 
 instance RenderableM Ship where
-    renderM Ship { position, getColor, getPicture } = uncurry Graphics.Gloss.translate position (color getColor getPicture)
+    renderM Ship { position, getShipColor, getShipPicture } = uncurry Graphics.Gloss.translate position (color getShipColor getShipPicture)
 
 instance Positioned Ship where
     getPosition ship = position ship

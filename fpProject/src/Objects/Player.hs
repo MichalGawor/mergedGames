@@ -1,3 +1,4 @@
+{-# XTypeSynonymInstances #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
 module Objects.Player where
@@ -18,7 +19,7 @@ initPlayer :: Point -> PlayerShip
 initPlayer position = initPlayerShip position
 
 initPlayerShip :: Point -> PlayerShip
-initPlayerShip position = MkPlayerShip baseShip{ Objects.Ships.getColor=cyan, Objects.Ships.getPicture=rectangle 4.0 2.0, Objects.Ships.velocity=(0.0, 0.0), weapon=NoWeapon}
+initPlayerShip position = MkPlayerShip baseShip{ Objects.Ships.getShipColor=cyan, Objects.Ships.getShipPicture=rectangle 4.0 2.0, Objects.Ships.velocity=(0.0, 0.0), weapon=NoWeapon}
 
 
 instance HitBox PlayerShip where

@@ -63,7 +63,7 @@ initProjectile (x, y) = undefined
 
 
 baseShip :: Ship
-baseShip = Ship {maxHp=100, currHp=100, weapon=NoWeapon, Objects.Ships.position=(0, 0), Objects.Ships.velocity=(-0.02, 0.0), collisionDamage=20, getColor=black, getPicture=(square 2.0) }
+baseShip = Ship {maxHp=100, currHp=100, weapon=NoWeapon, Objects.Ships.position=(0, 0), Objects.Ships.velocity=(-0.02, 0.0), collisionDamage=20, getShipColor=black, getShipPicture=(square 2.0) }
 
 baseWeapon :: Weapon
 baseWeapon = undefined
@@ -72,7 +72,7 @@ baseGunShip :: GunShip
 baseGunShip = undefined
 
 baseSuicideShip :: SuicideShip
-baseSuicideShip = MkSuicideShip baseShip{ getColor=red, getPicture=circle 2.0} (Degrees 5)
+baseSuicideShip = MkSuicideShip baseShip{ getShipColor=red, getShipPicture=circle 2.0} (Degrees 5)
 
 baseRocketSip :: RocketShip
 baseRocketSip = undefined

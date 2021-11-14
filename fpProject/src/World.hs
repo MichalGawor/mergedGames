@@ -91,6 +91,10 @@ class Positioned a => RenderableObject a where
                 c        = World.getColor ob
                 pic      = World.getPicture ob
 
+instance RenderableObject a => RenderableObject (Maybe a) where
+    getPicture (Just object) = World.getPicture object
+    getPicture Nothing = Blank
+
 instance RenderableObject Enemy where
     getPicture (MkSuicideEnemy suicideShip) = World.getPicture suicideShip
     getPicture (MkGunEnemy gunShip) = World.getPicture gunShip
@@ -101,8 +105,8 @@ instance RenderableObject Enemy where
     getColor (MkRocketEnemy rocketShip) = World.getColor rocketShip
 
 instance RenderableObject Ship where
-    getColor ship = Objects.Ships.getColor ship
-    getPicture ship = Objects.Ships.getPicture ship
+    getColor ship = getShipColor ship
+    getPicture ship = getShipPicture ship
 
 instance RenderableObject PlayerShip where
     getPicture (MkPlayerShip ship) = World.getPicture ship
