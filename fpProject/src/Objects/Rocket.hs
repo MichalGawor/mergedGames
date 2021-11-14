@@ -17,11 +17,6 @@ data Rocket = MkRocket {
     existingTime :: Time
 }
 
-instance Killable Rocket where
-    takeDamage :: Rocket -> Damage -> Maybe Rocket 
-    takeDamage rocket dealDamage | dealDamage < 1 = Nothing
-                                 | otherwise = Just rocket 
-
 instance Moveable Rocket where
     move :: Rocket -> Target Point -> Maybe Rocket
     -- if no target move straight forward
@@ -32,3 +27,10 @@ instance Moveable Rocket where
                                                                                            newVelocity = homingTrajectory
                                                                                            newPosition = uniformLinearMotion position homingTrajectory
                                                                                            in Just rocket{ position=newPosition, velocity=newVelocity, maxAngularSpeed=maxAngularSpeed }
+
+instance RenderableM Rocket where
+    renderM rocket = uncurry Graphics.Gloss.translate (position rocket) (color orange (Circle 0.3))
+
+instance Positioned Rocket where
+    getPosition rocket = position rocket
+    setPosition rocket@( MkRocket {position}) newPosition = rocket{ position=newPosition }

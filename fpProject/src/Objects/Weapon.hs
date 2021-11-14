@@ -8,15 +8,17 @@ import Objects.Projectiles
 
 
 -- # Basic types
-type RPM = Int -- rounds per minute
+type Counter = Int -- tracks 
+type StepsPerShoot = Int
 
 -- # Weapons
-data Weapon = MkWeapon Projectile RPM | NoWeapon 
+data Weapon = MkWeapon Projectile StepsPerShoot Counter | NoWeapon 
 
 class Shootable a where
-    shoot :: a -> Maybe Projectile
+    shoot :: a -> (a, Maybe Projectile)
 
 instance Shootable Weapon where
-    shoot :: Weapon -> Maybe Projectile
-    shoot NoWeapon = Nothing
-    shoot (MkWeapon projectile rpm) = Just projectile -- #TODO MUST fire rate handling                                                                       andling                                                                       
+    shoot :: Weapon -> (Weapon, Maybe Projectile)
+    shoot NoWeapon = (NoWeapon, Nothing)
+    shoot (MkWeapon projectile stepsPerShoot counter) | counter == stepsPerShoot = (MkWeapon projectile stepsPerShoot 0, Just projectile)
+                                                      | otherwise = (MkWeapon projectile stepsPerShoot (counter+1), Nothing)

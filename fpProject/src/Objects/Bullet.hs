@@ -26,3 +26,10 @@ instance Killable Bullet where
     -- just so Projectile can derive Killable
     takeDamage :: Bullet -> Damage -> Maybe Bullet
     takeDamage bullet _ = Just bullet
+
+instance RenderableM Bullet where
+    renderM bullet = uncurry Graphics.Gloss.translate (position bullet) (color red (Circle 0.1))
+
+instance Positioned Bullet where
+    getPosition bullet = position bullet
+    setPosition bullet@( MkBullet {position}) newPosition = bullet{ position=newPosition }
