@@ -88,16 +88,13 @@ class Healthy a where
                     Dead -> True
                     _    -> False
 
-class Positioned a => RenderableObject a where
-    getPicture   :: a -> Picture
-    getColor     :: a -> Color 
+class (Renderable a, Positioned a) => RenderableObject a where
     renderObject :: a -> WorldState -> Picture
-    renderObject ob wstate  | inBound p b = Translate (x-xmin) (y-ymin) (color c pic)
+    renderObject ob wstate  | inBound p b = Translate (x-xmin) (y-ymin) pic
                             | otherwise   = Blank
         where   b@(MkBound xmin xmax, MkBound ymin ymax) = mapBounds wstate
                 p@(x, y) = getPosition ob
-                c        = getColor ob
-                pic      = getPicture ob
+                pic = render ob
 
 class (Moveable a, Healthy a) => UpdatableObject a where
     updateObject :: a -> Float -> WorldState -> a
