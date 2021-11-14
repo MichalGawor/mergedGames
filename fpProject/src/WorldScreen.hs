@@ -28,7 +28,7 @@ initWorldstate = MkWorldState Unloaded 0.0 player [] [] [[]] 0.0
 instance Updatable WorldState where
       update secs wstate = wstate''
             where wstate' = case state wstate of
-                              Playing -> collisionPhase . shootPhase . movePhase $ wstate -- updating all props of worldstate player, enemies, state, spawns
+                              Playing -> movePhase wstate -- updating all props of worldstate player, enemies, state, spawns
                               _      -> wstate
                   wstate'' = wstate' -- identify collisions
 

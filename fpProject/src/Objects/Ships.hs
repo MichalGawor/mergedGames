@@ -39,17 +39,6 @@ instance Positioned Ship where
 -- # Player's Ship
 data PlayerShip = MkPlayerShip Ship
 
-instance Moveable PlayerShip where
-    move :: PlayerShip -> Target Point -> Maybe PlayerShip
-    move pShip@(MkPlayerShip ship@(Ship { position })) (MkTarget (x, y)) | x == 1 = case uniformLinearMotion position (1, 0) of
-                                                                                    newPosition | isInScreen newPosition -> Just (MkPlayerShip ship{position=newPosition})
-                                                                                                | otherwise -> Just (MkPlayerShip ship)
-                                                                         | x == -1 =case uniformLinearMotion position (-1, 0) of
-                                                                                    newPosition | isInScreen newPosition -> Just (MkPlayerShip ship{position=newPosition})
-                                                                                                | otherwise -> Just (MkPlayerShip ship)
-    move pShip _ = Just pShip
-
-
 instance RenderableM PlayerShip where
     renderM (MkPlayerShip ship) = renderM ship  
 

@@ -1,10 +1,11 @@
+{-# XTypeSynonymInstances #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
 
 module Objects.Rocket where
 
 import Graphics.Gloss
-
+import Data.Angle
 import Kinematics
 import Plane
 import Objects.Objects
@@ -13,7 +14,7 @@ data Rocket = MkRocket {
     position :: Point, 
     velocity :: Velocity, 
     damage :: Damage, 
-    maxAngularSpeed :: AngularSpeed, 
+    maxAngularSpeed :: Degrees Float, 
     existingTime :: Time
 }
 

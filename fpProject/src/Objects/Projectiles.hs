@@ -1,3 +1,4 @@
+{-# XTypeSynonymInstances #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
 

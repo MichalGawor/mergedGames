@@ -32,7 +32,7 @@ position = getPosition sship
 getPositionFromMaybeShip (Just ship) = getPosition ship
 getPositionFromMaybeShip Nothing = (-1, -1)
 
-movedShip = mapMaybe (flip Objects.Objects.move NoTarget) [sship]
+movedShip = mapMaybe (flip Objects.Objects.move (MkTarget(2,2))) [sship]
 
 newPosition = getPosition $ head movedShip
 

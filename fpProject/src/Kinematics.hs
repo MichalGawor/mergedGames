@@ -3,11 +3,10 @@
 module Kinematics where
 
 import Plane
-import Data.Angle (Angle, Degrees)
+import Data.Angle 
 import Graphics.Gloss
 
 type Acceleration = Vector
-type AngularSpeed = Degrees Float
 -- note that Target isn't explicitly used here, but it allows for pattern match against linear or homing movement 
 type Time = Float
 data Target x = MkTarget x | NoTarget
@@ -30,13 +29,11 @@ uniformLinearMotion (x, y) (vx, vy) = let x' = x + (vx * 1)
 --                                                                           in (x', y')
 
 
-homingMotion :: Point -> Velocity -> AngularSpeed -> Point -> Velocity
+homingMotion :: Point -> Velocity -> Degrees Float-> Point -> Velocity
 -- homing motion, given starting location, current velocity vector, maximum turning angle and target return new velocity vector 
-homingMotion position@(x,y) currVelocity maxAngle target@(x',y') = let shift = (x' - x, y' - y) -- shift from current position to target's position
+homingMotion position@(x,y) currVelocity (Degrees maxAngle) target@(x',y') = let shift = (x' - x, y' - y) -- shift from current position to target's position
                                                                        in case vecAngle currVelocity shift of -- angle between current velocity vector and shift vector
-                                                                           angle | angle > maxAngle -> polarToVec (polarVecAddAngle (vecToPolar position) maxAngle)
-                                                                           angle | angle < - maxAngle -> polarToVec (polarVecAddAngle (vecToPolar position) (-1 * maxAngle))
-                                                                           angle -> polarToVec (polarVecAddAngle (vecToPolar position) angle)
-
-
+                                                                           Degrees angle | angle > maxAngle -> polarToVec (polarVecAddAngle (vecToPolar position) (Degrees (-1 * maxAngle)))
+                                                                           Degrees angle | angle < (-1 * maxAngle) -> polarToVec (polarVecAddAngle (vecToPolar position) (Degrees maxAngle))
+                                                                           degrees -> polarToVec (polarVecAddAngle (vecToPolar position) degrees)
 
