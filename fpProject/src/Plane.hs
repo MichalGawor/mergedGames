@@ -19,13 +19,16 @@ translate (x, y) (a, b) = (a + x, b + y)
 
 vecAngle :: Vector -> Vector -> Degrees Float
 -- get angle between two vectors in degrees
-vecAngle (x, y) (x', y')   = let cosA = ((x * x') + (y * y')) / ((sqrt (x ** 2 + y ** 2)) * (sqrt (x' ** 2 + y' ** 2)))
+vecAngle (x, y) (x', y')   = let cosA = ((x * x') + (y' * y')) / ((sqrt (x ** 2 + y ** 2)) * (sqrt (x' ** 2 + y' ** 2)))
                                in arccosine cosA 
+
+degreeToFloat :: Degrees Float -> Float
+degreeToFloat (Degrees x) = x
 
 vecToPolar :: Vector -> PolarVector
 -- represent vector in polar coordinater
 vecToPolar (x, y) = let magnitude = (sqrt (x ** 2 + y ** 2))
-                          in (magnitude, (arccosine (vecAngle (x, y) (0,0))))
+                          in (magnitude, (vecAngle (x, y) (1,0)))
 
 polarToVec :: PolarVector -> Vector
 -- represent polar coords as a vector
