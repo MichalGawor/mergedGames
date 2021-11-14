@@ -111,9 +111,7 @@ instance Moveable SuicideShip where
                                                                                                       homingTrajectory = homingMotion position velocity maxAngularSpeed (x, y)
                                                                                                       newVelocity = homingTrajectory
                                                                                                       newPosition = uniformLinearMotion position homingTrajectory 
-                                                                                                      in case newPosition of
-                                                                                                          newPosition | isInScreen newPosition -> Just (MkSuicideShip ship{ position = newPosition, velocity = newVelocity } maxAngularSpeed)
-                                                                                                                      | otherwise -> Nothing
+                                                                                                      in Just (MkSuicideShip ship{ position = newPosition, velocity = newVelocity } maxAngularSpeed)
 
 instance RenderableM SuicideShip where
     renderM (MkSuicideShip ship _) = renderM ship

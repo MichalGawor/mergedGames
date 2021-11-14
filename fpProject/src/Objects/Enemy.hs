@@ -63,7 +63,7 @@ initProjectile (x, y) = undefined
 
 
 baseShip :: Ship
-baseShip = Ship {maxHp=100, currHp=100, weapon=NoWeapon, Objects.Ships.position=(0, 0), Objects.Ships.velocity=(-0.02, 0.0), collisionDamage=20, getShipColor=black, getShipPicture=(square 2.0) }
+baseShip = Ship {maxHp=100, currHp=100, weapon=NoWeapon, Objects.Ships.position=(0, 0), Objects.Ships.velocity=(-1, 0.0), collisionDamage=20, getShipColor=black, getShipPicture=(square 2.0) }
 
 baseWeapon :: Weapon
 baseWeapon = undefined
