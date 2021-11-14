@@ -19,8 +19,13 @@ translate (x, y) (a, b) = (a + x, b + y)
 
 vecAngle :: Vector -> Vector -> Degrees Float
 -- get angle between two vectors in degrees
-vecAngle (x, y) (x', y')   = let cosA = ((x * x') + (y' * y')) / ((sqrt (x ** 2 + y ** 2)) * (sqrt (x' ** 2 + y' ** 2)))
-                               in arccosine cosA 
+vecAngle (x, y) (x', y') = let cosA = ((x * x') + (y * y')) / ((sqrt((x^2) + (y^2))) * (sqrt ((x' ^2) + (y' ^2))))
+                               in angleFromCos cosA 
+
+angleFromCos :: Float -> Degrees Float
+angleFromCos cosA | cosA >= 0 = arccosine cosA
+                  | otherwise =  Degrees (mod' ((degreeToFloat (arccosine cosA)) - 360) 360)
+
 
 degreeToFloat :: Degrees Float -> Float
 degreeToFloat (Degrees x) = x

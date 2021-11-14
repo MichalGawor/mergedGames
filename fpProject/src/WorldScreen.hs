@@ -77,6 +77,7 @@ instance DoIO WorldState where
     -- | Movement phase
 movePhase :: WorldState -> WorldState
 movePhase ws@(MkWorldState{ player, enemies, projectiles, elapsedTime}) = let homingTarget = getPosition player
+                                                                              movedPlayer = huskPlayerFromMaybe (move player NoTarget)
                                                                               suicideEnemies = getSuicideEnemies enemies
                                                                               normalEnemies = getNormalEnemies enemies
                                                                               movedSuicideEnemies = mapMaybe (flip moveObject (MkTarget homingTarget)) suicideEnemies
@@ -87,7 +88,7 @@ movePhase ws@(MkWorldState{ player, enemies, projectiles, elapsedTime}) = let ho
                                                                               --movedNormalProjectiles = mapMaybe (flip moveObject NoTarget) normalProjectiles
                                                                               --movedHomingProjectiles = mapMaybe (flip moveObject homingTarget) homingProjectiles
                                                                               --movedProjectiles = movedNormalProjectiles ++ movedHomingProjectiles
-                                                                              in ws{player=player, enemies=movedEnemies, projectiles=projectiles, elapsedTime=elapsedTime}
+                                                                              in ws{player=movedPlayer, enemies=movedEnemies, projectiles=projectiles, elapsedTime=elapsedTime}
 
                               
 

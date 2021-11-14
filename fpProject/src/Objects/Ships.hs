@@ -45,7 +45,13 @@ instance RenderableM PlayerShip where
 
 instance Positioned PlayerShip where
     getPosition (MkPlayerShip ship) = Objects.Objects.getPosition ship 
-    setPosition (MkPlayerShip ship) point = MkPlayerShip (Objects.Objects.setPosition ship point)                                                          
+    setPosition (MkPlayerShip ship) point = MkPlayerShip (Objects.Objects.setPosition ship point)    
+
+instance Moveable PlayerShip where
+    move (MkPlayerShip ship@(Ship {position })) _ = Just (MkPlayerShip ship{position=addOneToPosition position})
+
+addOneToPosition :: Point -> Point
+addOneToPosition (x, y) = (x+1, y)                                                      
 
 -- instance Moveable Enemy where
 --     move (MkSuicideEnemy suicideShip) target = MkSuicideShip (move suicideShip target)
