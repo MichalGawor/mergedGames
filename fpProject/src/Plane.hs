@@ -1,6 +1,6 @@
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE InstanceSigs #-}
-module  where
+module Plane where
 
 import Graphics.Gloss
 import Data.Angle
